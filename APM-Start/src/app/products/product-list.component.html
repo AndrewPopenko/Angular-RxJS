@@ -1,47 +1,49 @@
 <div class="card">
   <div class="card-header">
-    {{pageTitle}}
+    {{ pageTitle }}
   </div>
 
   <div class="card-body">
     <div class="container">
       <div class="row justify-content-between">
         <div class="col-3">
-          <select class="form-control"
-                  (change)="onSelected($any($event.target).value)">
+          <select (change)="onSelected($any($event.target).value)"
+                  class="form-control">
             <option value="0">- Display All -</option>
             <option *ngFor="let category of categories"
-                    [value]="category.id">{{ category.name }}</option>
+                    [value]="category.id">{{ category.name }}
+            </option>
           </select>
         </div>
         <div class="col-2">
-          <button type="button"
+          <button (click)="onAdd()"
                   class="btn btn-outline-secondary"
-                  (click)="onAdd()">Add Product</button>
+                  type="button">Add Product
+          </button>
         </div>
       </div>
     </div>
 
     <div class="table-responsive">
-      <table class="table mb-0"
-             *ngIf="products">
+      <table *ngIf="products$ | async as products"
+             class="table mb-0">
         <thead>
-          <tr>
-            <th>Product</th>
-            <th>Code</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>In Stock</th>
-          </tr>
+        <tr>
+          <th>Product</th>
+          <th>Code</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>In Stock</th>
+        </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let product of products">
-            <td>{{ product.productName }}</td>
-            <td>{{ product.productCode }}</td>
-            <td>{{ product.categoryId }}</td>
-            <td>{{ product.price | currency:"USD":"symbol":"1.2-2" }}</td>
-            <td>{{ product.quantityInStock }}</td>
-          </tr>
+        <tr *ngFor="let product of products">
+          <td>{{ product.productName }}</td>
+          <td>{{ product.productCode }}</td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.price | currency:"USD":"symbol":"1.2-2" }}</td>
+          <td>{{ product.quantityInStock }}</td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -49,7 +51,7 @@
   </div>
 </div>
 
-<div class="alert alert-danger"
-     *ngIf="errorMessage">
+<div *ngIf="errorMessage"
+     class="alert alert-danger">
   {{ errorMessage }}
 </div>
