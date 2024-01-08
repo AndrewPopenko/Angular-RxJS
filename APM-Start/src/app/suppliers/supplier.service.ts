@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { throwError, Observable } from 'rxjs';
+import { concatMap, Observable, of, tap, throwError } from 'rxjs';
+import { Supplier } from "./supplier";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,15 @@ import { throwError, Observable } from 'rxjs';
 export class SupplierService {
   suppliersUrl = 'api/suppliers';
 
-  constructor(private http: HttpClient) { }
+  suppliersWithConcatMap$ = of(1, 5, 8)
+    .pipe(
+      tap(id => console.log('conactMap source Observable', id)),
+      concatMap(id => this.http.get<Supplier>(`${this.suppliersUrl}/${id}`))
+    );
+
+  constructor(private http: HttpClient) {
+    this.suppliersWithConcatMap$.subscribe(item => console.log('concatMap result', item))
+  }
 
   private handleError(err: HttpErrorResponse): Observable<never> {
     // in a real world app, we may send the server to some remote logging infrastructure
